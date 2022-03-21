@@ -15,6 +15,8 @@ public class TreeBuilder {
 
     private static final List<TokenType> UNARY_OPERATIONS = asList(DIGIT, VARIABLE, PARENTHESIZED_EXPRESSION, FUNCTION);
     private static final TokenType BINARY = SIGN;
+    public static final String MALFORMED = "Malformed expression.";
+    public static final String NO_TOKEN = "No token with index ";
 
     private final List<Token> tokens;
     private final Map<String, Integer> priorities = new HashMap<>();
@@ -34,13 +36,13 @@ public class TreeBuilder {
         if (UNARY_OPERATIONS.contains(token.getTokenType())) {
             return token;
         } else {
-            throw new ExpressionsEvaluatorException("Malformed expression.");
+            throw new ExpressionsEvaluatorException(MALFORMED);
         }
     }
 
     private Token current() {
         if (tokens.size() <= index) {
-            throw new ExpressionsEvaluatorException("No token with index " + index);
+            throw new ExpressionsEvaluatorException(NO_TOKEN + index);
         }
         return tokens.get(index);
     }
@@ -71,7 +73,7 @@ public class TreeBuilder {
             operator.setRight(buildExpression(leftPriority));
             return operator;
         } else {
-            throw new ExpressionsEvaluatorException("Malformed expression.");
+            throw new ExpressionsEvaluatorException(MALFORMED);
         }
     }
 

@@ -17,6 +17,9 @@ public record Evaluator(Map<String, BigDecimal> variables) {
     public static final String MULTIPLY = "*";
     public static final String DIVIDE = "/";
     public static final String UNKNOWN_SIGN = "Unknown sign!";
+    public static final String ERROR = "Expression error";
+    public static final String NO_FUNCTION = "No such function ";
+    public static final String VALUE_ERROR = "Value error";
 
     public Object expression(Node node) {
         return switch (node.getTokenType()) {
@@ -24,7 +27,7 @@ public record Evaluator(Map<String, BigDecimal> variables) {
             case PARENTHESIZED_EXPRESSION, SIGN -> evaluate(node);
             case VARIABLE -> variableName(node);
             case FUNCTION -> evalFunction(node);
-            default -> throw new ExpressionsEvaluatorException("Expression error");
+            default -> throw new ExpressionsEvaluatorException(ERROR);
         };
     }
 
@@ -52,7 +55,7 @@ public record Evaluator(Map<String, BigDecimal> variables) {
                     evaluate(node.getFunctionArgumentsNodes().get(0)).intValue(),
                     evaluate(node.getFunctionArgumentsNodes().get(1)).intValue()
             );
-            default -> throw new ExpressionsEvaluatorException("No such function " + node.getFunctionName());
+            default -> throw new ExpressionsEvaluatorException(NO_FUNCTION + node.getFunctionName());
         };
     }
 
@@ -64,7 +67,7 @@ public record Evaluator(Map<String, BigDecimal> variables) {
         } else if (value instanceof String) {
             return variables.get((String) value);
         } else {
-            throw new ExpressionsEvaluatorException("right value error");
+            throw new ExpressionsEvaluatorException(VALUE_ERROR);
         }
     }
 

@@ -3,7 +3,6 @@ package com.example.expressionsevaluator.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,18 +37,5 @@ public class Node {
         this.functionArguments = functionArguments;
         this.functionArgumentsNodes = functionArgumentsTrees;
         this.tokens = tokens;
-    }
-
-    public Node(TokenType type, String value) {
-        this(
-                type,
-                value,
-                null,
-                null,
-                "",
-                Collections.emptyList(),
-                Collections.emptyList(),
-                Collections.emptyList()
-        );
     }
 }

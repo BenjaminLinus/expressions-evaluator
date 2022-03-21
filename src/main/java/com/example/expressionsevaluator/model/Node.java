@@ -15,7 +15,7 @@ public class Node {
     private String value;
     private String functionName;
     private List<ArgumentTokens> functionArguments;
-    public List<Node> functionArgumentsNodes;
+    private List<Node> functionArgumentsNodes;
     private List<Token> tokens;
 
     public Node(

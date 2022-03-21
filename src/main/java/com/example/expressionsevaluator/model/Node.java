@@ -1,40 +1,46 @@
 package com.example.expressionsevaluator.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 public class Node {
 
-    private TokenType tokenType;
     private Node left;
     private Node right;
-    private String value;
-    private String functionName;
-    private List<ArgumentTokens> functionArguments;
-    private List<Node> functionArgumentsNodes;
-    private List<Token> tokens;
+    private Token token;
+    private List<Node> functionArgumentsTrees;
 
     public Node(
-            TokenType type,
-            String value,
+            Token token,
             Node left,
             Node right,
-            String functionName,
-            List<ArgumentTokens> functionArguments,
-            List<Node> functionArgumentsTrees,
-            List<Token> tokens
+            List<Node> functionArgumentsTrees
     ) {
-        this.tokenType = type;
+        this.token = token;
         this.left = left;
         this.right = right;
-        this.value = value;
-        this.functionName = functionName;
-        this.functionArguments = functionArguments;
-        this.functionArgumentsNodes = functionArgumentsTrees;
-        this.tokens = tokens;
+        this.functionArgumentsTrees = functionArgumentsTrees;
+    }
+
+    public TokenType type() {
+        return token.type();
+    }
+
+    public String value() {
+        return token.value();
+    }
+
+    public String functionName() {
+        return token.functionName();
+    }
+
+    public List<ArgumentTokens> functionArguments() {
+        return token.functionArguments();
+    }
+
+    public List<Token> parenthesizedExpression() {
+        return token.parenthesizedExpression();
     }
 }

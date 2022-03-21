@@ -18,7 +18,7 @@ public record Evaluator(Map<String, BigDecimal> variables) {
     private static final String VALUE_ERROR = "Value error";
 
     public Object expression(Node node) {
-        return switch (node.getTokenType()) {
+        return switch (node.type()) {
             case DIGIT -> digit(node);
             case PARENTHESIZED_EXPRESSION, SIGN -> evaluate(node);
             case VARIABLE -> variableName(node);
@@ -28,7 +28,7 @@ public record Evaluator(Map<String, BigDecimal> variables) {
     }
 
     private BigDecimal digit(Node token) {
-        return new BigDecimal(token.getValue());
+        return new BigDecimal(token.value());
     }
 
     private BigDecimal evalFunction(Node node) {
@@ -36,22 +36,22 @@ public record Evaluator(Map<String, BigDecimal> variables) {
     }
 
     private double eval(Node node) {
-        return switch (node.getFunctionName()) {
-            case "sqrt" -> sqrt(evaluate(node.getFunctionArgumentsNodes().get(0)).doubleValue());
-            case "log" -> log(evaluate(node.getFunctionArgumentsNodes().get(0)).doubleValue());
-            case "abs" -> abs((evaluate(node.getFunctionArgumentsNodes().get(0))).doubleValue());
-            case "acos" -> acos((evaluate(node.getFunctionArgumentsNodes().get(0))).doubleValue());
-            case "cos" -> cos((evaluate(node.getFunctionArgumentsNodes().get(0))).doubleValue());
-            case "cosh" -> cosh((evaluate(node.getFunctionArgumentsNodes().get(0))).doubleValue());
+        return switch (node.functionName()) {
+            case "sqrt" -> sqrt(evaluate(node.getFunctionArgumentsTrees().get(0)).doubleValue());
+            case "log" -> log(evaluate(node.getFunctionArgumentsTrees().get(0)).doubleValue());
+            case "abs" -> abs((evaluate(node.getFunctionArgumentsTrees().get(0))).doubleValue());
+            case "acos" -> acos((evaluate(node.getFunctionArgumentsTrees().get(0))).doubleValue());
+            case "cos" -> cos((evaluate(node.getFunctionArgumentsTrees().get(0))).doubleValue());
+            case "cosh" -> cosh((evaluate(node.getFunctionArgumentsTrees().get(0))).doubleValue());
             case "pow" -> pow(
-                    evaluate(node.getFunctionArgumentsNodes().get(0)).doubleValue(),
-                    evaluate(node.getFunctionArgumentsNodes().get(1)).doubleValue()
+                    evaluate(node.getFunctionArgumentsTrees().get(0)).doubleValue(),
+                    evaluate(node.getFunctionArgumentsTrees().get(1)).doubleValue()
             );
             case "addExact" -> addExact(
-                    evaluate(node.getFunctionArgumentsNodes().get(0)).intValue(),
-                    evaluate(node.getFunctionArgumentsNodes().get(1)).intValue()
+                    evaluate(node.getFunctionArgumentsTrees().get(0)).intValue(),
+                    evaluate(node.getFunctionArgumentsTrees().get(1)).intValue()
             );
-            default -> throw new ExpressionsEvaluatorException(NO_FUNCTION + node.getFunctionName());
+            default -> throw new ExpressionsEvaluatorException(NO_FUNCTION + node.functionName());
         };
     }
 
@@ -68,7 +68,7 @@ public record Evaluator(Map<String, BigDecimal> variables) {
     }
 
     private String variableName(Node token) {
-        return token.getValue();
+        return token.value();
     }
 
     public BigDecimal evaluate(Node node) {
@@ -77,7 +77,7 @@ public record Evaluator(Map<String, BigDecimal> variables) {
         } else {
             BigDecimal left = value(expression(node.getLeft()));
             BigDecimal right = value(expression(node.getRight()));
-            return switch (node.getValue()) {
+            return switch (node.value()) {
                 case PLUS -> left.add(right);
                 case MINUS -> left.subtract(right);
                 case MULTIPLY -> left.multiply(right);

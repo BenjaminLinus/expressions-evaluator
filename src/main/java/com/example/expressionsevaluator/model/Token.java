@@ -8,7 +8,7 @@ public record Token(
         String value,
         String functionName,
         List<ArgumentTokens> functionArguments,
-        List<Token> tokens
+        List<Token> parenthesizedExpression
 ) {
 
     public Token(TokenType type, String value) {

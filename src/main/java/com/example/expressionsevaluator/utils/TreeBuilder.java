@@ -36,7 +36,7 @@ public class TreeBuilder {
     }
 
     private Node check(Node token) {
-        if (UNARY_OPERATIONS.contains(token.getTokenType())) {
+        if (UNARY_OPERATIONS.contains(token.type())) {
             return token;
         } else {
             throw new ExpressionsEvaluatorException(MALFORMED);
@@ -54,14 +54,10 @@ public class TreeBuilder {
         Token token = current();
         ++index;
         return new Node(
-                token.type(),
-                token.value(),
+                token,
                 null,
                 null,
-                token.functionName(),
-                token.functionArguments(),
-                Collections.emptyList(),
-                token.tokens()
+                Collections.emptyList()
         );
     }
 
@@ -70,9 +66,9 @@ public class TreeBuilder {
     }
 
     private Node assignLeftRight(Node node, Node operator) {
-        if (BINARY.equals(operator.getTokenType())) {
+        if (BINARY.equals(operator.type())) {
             operator.setLeft(buildInnerNodes(node));
-            int leftPriority = priority(operator.getValue());
+            int leftPriority = priority(operator.value());
             operator.setRight(buildExpression(leftPriority));
             return operator;
         } else {
@@ -82,14 +78,10 @@ public class TreeBuilder {
 
     private Node newNode(Node left) {
         return new Node(
-                left.getTokenType(),
-                left.getValue(),
+                left.getToken(),
                 left.getLeft(),
                 left.getRight(),
-                left.getFunctionName(),
-                left.getFunctionArguments(),
-                buildArgumentsNodes(left),
-                left.getTokens()
+                buildArgumentsNodes(left)
         );
     }
 
@@ -108,15 +100,15 @@ public class TreeBuilder {
     }
 
     private Node buildInnerNodes(Node node) {
-        return switch (node.getTokenType()) {
-            case PARENTHESIZED_EXPRESSION -> new TreeBuilder(node.getTokens()).buildExpression(0);
+        return switch (node.type()) {
+            case PARENTHESIZED_EXPRESSION -> new TreeBuilder(node.parenthesizedExpression()).buildExpression(0);
             case FUNCTION -> newNode(node);
             default -> node;
         };
     }
 
     private List<Node> buildArgumentsNodes(Node left) {
-        return left.getFunctionArguments().stream()
+        return left.functionArguments().stream()
                 .map(tokens -> new TreeBuilder(tokens.tokens())
                         .buildExpression(0)).collect(Collectors.toList());
     }

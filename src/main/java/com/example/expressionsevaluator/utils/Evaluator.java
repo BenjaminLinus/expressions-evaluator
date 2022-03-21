@@ -7,19 +7,15 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Map;
 
+import static com.example.expressionsevaluator.utils.TreeBuilder.*;
 import static java.lang.Math.*;
 import static java.math.BigDecimal.valueOf;
 
 public record Evaluator(Map<String, BigDecimal> variables) {
-
-    public static final String PLUS = "+";
-    public static final String MINUS = "-";
-    public static final String MULTIPLY = "*";
-    public static final String DIVIDE = "/";
-    public static final String UNKNOWN_SIGN = "Unknown sign!";
+    private static final String UNKNOWN_SIGN = "Unknown sign!";
     public static final String ERROR = "Expression error";
-    public static final String NO_FUNCTION = "No such function ";
-    public static final String VALUE_ERROR = "Value error";
+    private static final String NO_FUNCTION = "No such function ";
+    private static final String VALUE_ERROR = "Value error";
 
     public Object expression(Node node) {
         return switch (node.getTokenType()) {

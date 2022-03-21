@@ -13,10 +13,14 @@ import static java.util.Arrays.asList;
 
 public class TreeBuilder {
 
+    public static final String PLUS = "+";
+    public static final String MINUS = "-";
+    public static final String MULTIPLY = "*";
+    public static final String DIVIDE = "/";
     private static final List<TokenType> UNARY_OPERATIONS = asList(DIGIT, VARIABLE, PARENTHESIZED_EXPRESSION, FUNCTION);
     private static final TokenType BINARY = SIGN;
-    public static final String MALFORMED = "Malformed expression.";
-    public static final String NO_TOKEN = "No token with index ";
+    private static final String MALFORMED = "Malformed expression.";
+    private static final String NO_TOKEN = "No token with index ";
 
     private final List<Token> tokens;
     private final Map<String, Integer> priorities = new HashMap<>();
@@ -25,11 +29,10 @@ public class TreeBuilder {
     public TreeBuilder(List<Token> tokens) {
         this.tokens = new ArrayList<>(tokens);
         this.tokens.add(new Token(EOB, "(eob)"));
-        priorities.put("*", 60);
-        priorities.put("/", 60);
-        priorities.put("+", 50);
-        priorities.put("-", 50);
-        priorities.put("=", 10);
+        priorities.put(MULTIPLY, 2);
+        priorities.put(DIVIDE, 2);
+        priorities.put(PLUS, 1);
+        priorities.put(MINUS, 1);
     }
 
     private Node check(Node token) {
